@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Roti Share: The 3D Fractions Game</title>
+  <meta name="description" content="An interactive real-time 3D mathematics adventure teaching fractions through Indian kitchen food sharing for kids." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <!-- 3D WebGL Canvas Layer -->
+  <div id="game-container">
+    <canvas id="webgl-canvas"></canvas>
+  </div>
+
+  <!-- UI & Game HUD Layer -->
+  <div id="ui-overlay">
+    <!-- Top Navigation HUD -->
+    <header id="top-bar" class="hud-panel">
+      <div class="hud-left">
+        <button id="btn-menu" class="hud-icon-btn" title="Main Menu" aria-label="Main Menu">
+          <span class="icon">🏠</span>
+        </button>
+        <div class="level-badge">
+          <span class="level-label">LEVEL</span>
+          <span id="level-num">1</span>
+        </div>
+        <div class="level-meta">
+          <h2 id="level-title">Two Friends</h2>
+          <div class="badge-row">
+            <span id="game-mode-tag" class="badge mode-tag">CAMPAIGN</span>
+            <span id="difficulty-tag" class="badge">EASY</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-center">
+        <!-- Compact Objective Banner -->
+        <div id="compact-objective">
+          <span class="obj-icon">🎯</span>
+          <span id="objective-instruction">Share one whole roti equally between Chintu and Meera.</span>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <!-- Optional Timed Mode Countdown -->
+        <div id="timer-badge" class="timer-badge hidden">
+          <span class="timer-icon">⏱️</span>
+          <span id="timer-val">60s</span>
+        </div>
+        <div class="stars-container" id="stars-display">
+          <span class="star active">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+        <div class="score-badge" title="Score">
+          <span class="score-icon">🌟</span>
+          <span id="score-val">0</span>
+        </div>
+        <div class="coins-badge" id="coins-badge" title="Roti Coins">
+          <span class="score-icon">🪙</span>
+          <span id="coins-val">0</span>
+        </div>
+        <button id="btn-sound" class="hud-icon-btn" title="Toggle Sound" aria-label="Toggle Sound">
+          <span id="sound-icon" class="icon">🔊</span>
+        </button>
+        <button id="btn-camera-reset" class="hud-icon-btn" title="Reset Camera View" aria-label="Reset Camera">
+          <span class="icon">🎥</span>
+        </button>
+        <button id="btn-help" class="hud-icon-btn" title="How to Play" aria-label="How to Play">
+          <span class="icon">❓</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sub-instruction Toast / Floating Status -->
+    <div id="sub-instruction-bar" class="sub-instruction-bar">
+      <span id="sub-instruction">Select 2 slices (1/2 each), slice the roti, and place 1 piece on each friend's plate.</span>
+    </div>
+
+    <!-- Bottom Controls & Action Bar -->
+    <div id="interaction-bar" class="hud-panel">
+      <!-- Equipment Selector Row -->
+      <div class="equipment-toggles">
+        <span class="selector-label">Equipment:</span>
+        <button id="tool-knife" class="tool-btn active" data-tool="knife" title="Butter Knife (Radial Cutting)">🔪 Knife</button>
+        <button id="tool-spatula" class="tool-btn" data-tool="spatula" title="Serving Spatula (Sharing to Plates)">🥄 Spatula</button>
+        <button id="tool-measure" class="tool-btn" data-tool="measure" title="Angle & Fraction Measuring Tool">📏 Measure</button>
+        <button id="tool-scale" class="tool-btn" data-tool="scale" title="3D Balance Scale">⚖️ Scale</button>
+        <button id="tool-tiles" class="tool-btn" data-tool="tiles" title="Fraction Tiles Rack">🧩 Tiles</button>
+      </div>
+
+      <div class="mode-toggles">
+        <button id="mode-cut" class="mode-btn active" data-mode="cut">
+          <span class="mode-icon">🔪</span>
+          <span class="mode-text">Slice</span>
+        </button>
+        <button id="mode-move" class="mode-btn" data-mode="move">
+          <span class="mode-icon">✋</span>
+          <span class="mode-text">Share to Plates</span>
+        </button>
+        <button id="mode-camera" class="mode-btn" data-mode="camera">
+          <span class="mode-icon">🔄</span>
+          <span class="mode-text">Look Around</span>
+        </button>
+      </div>
+
+      <!-- Quick Slicing Selector for Radial Division -->
+      <div id="slice-selector" class="slice-selector">
+        <span class="selector-label">Slices:</span>
+        <button class="slice-count-btn active" data-pieces="2">2 (1/2)</button>
+        <button class="slice-count-btn" data-pieces="3">3 (1/3)</button>
+        <button class="slice-count-btn" data-pieces="4">4 (1/4)</button>
+        <button class="slice-count-btn" data-pieces="6">6 (1/6)</button>
+        <button class="slice-count-btn" data-pieces="8">8 (1/8)</button>
+        <button id="btn-execute-cut" class="cut-confirm-btn">⚡ Cut & Share Roti</button>
+      </div>
+
+      <!-- Creative Kitchen Food Switcher (visible in Creative mode) -->
+      <div id="creative-food-selector" class="creative-food-selector hidden">
+        <span class="selector-label">Food:</span>
+        <button class="food-pick-btn active" data-food="roti">🫓 Roti</button>
+        <button class="food-pick-btn" data-food="pizza">🍕 Pizza</button>
+        <button class="food-pick-btn" data-food="pancake">🥞 Pancake</button>
+        <button class="food-pick-btn" data-food="laddoo">🟡 Laddoo</button>
+      </div>
+
+      <!-- Level Actions -->
+      <div id="level-actions" class="level-actions">
+        <button id="btn-reset-level" class="secondary-btn">↺ Reset</button>
+        <button id="btn-check-solution" class="primary-btn">✓ Check Sharing</button>
+      </div>
+    </div>
+
+    <!-- Compact Floating Hint Button (Bottom Right, completely unobtrusive) -->
+    <div id="hint-dock" class="hint-dock">
+      <button id="btn-hint" class="hint-floating-btn" title="Need a Hint?">
+        <span class="hint-icon">💡</span>
+        <span class="hint-label">Teacher's Hint</span>
+      </button>
+    </div>
+
+    <!-- Multiple Choice / Quiz Panel (for Levels 4, 6, 7) -->
+    <div id="fraction-quiz-panel" class="quiz-panel hidden">
+      <h3 id="quiz-question">Which fraction does this piece represent?</h3>
+      <div id="quiz-options" class="quiz-options"></div>
+    </div>
+
+    <!-- Active Floating Fraction Info Callout (Upper Right, non-obstructive) -->
+    <div id="fraction-math-callout" class="math-callout hidden">
+      <div class="fraction-display-large">
+        <span id="math-num">1</span>
+        <div class="fraction-line"></div>
+        <span id="math-den">2</span>
+      </div>
+      <div class="math-desc" id="math-desc">One Half (1/2)</div>
+    </div>
+
+    <!-- Feedback Toast -->
+    <div id="feedback-toast" class="toast hidden">
+      <span id="toast-icon">✨</span>
+      <span id="toast-message">Great job!</span>
+    </div>
+
+    <!-- Compact Non-Obstructive Hint Drawer / Tooltip -->
+    <div id="hint-modal" class="hint-drawer hidden">
+      <div class="hint-drawer-content">
+        <div class="hint-drawer-header">
+          <h4>💡 Teacher's Guide</h4>
+          <button id="btn-close-hint" class="close-tiny-btn">✕</button>
+        </div>
+        <p id="hint-text">To share equally between 2 friends, divide into 2 equal parts. Each part is 1/2!</p>
+      </div>
+    </div>
+
+    <!-- Success / Level Complete Modal -->
+    <div id="success-modal" class="modal hidden">
+      <div class="modal-card success-card">
+        <div class="celebrate-badge">🎉 SUPERB! 🎉</div>
+        <h2 id="success-title">Fair Share Achieved!</h2>
+        <div class="stars-reward" id="modal-stars">
+          <span class="star-lg">★</span>
+          <span class="star-lg">★</span>
+          <span class="star-lg">★</span>
+        </div>
+        <p id="success-message">Chintu and Meera are thrilled! Everyone received exactly 1/2 of the roti.</p>
+        <div class="math-explanation-box" id="success-math-box">
+          <span class="math-formula">1/2 + 1/2 = 1 Whole Roti</span>
+        </div>
+        <div class="modal-buttons">
+          <button id="btn-replay-level" class="secondary-btn">Replay</button>
+          <button id="btn-next-level" class="primary-btn">Next Challenge ➔</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Menu Overlay -->
+    <div id="main-menu" class="menu-overlay">
+      <div class="menu-backdrop"></div>
+      <div class="menu-card">
+        <div class="logo-area">
+          <div class="logo-icon">🫓</div>
+          <h1 class="game-title">ROTI SHARE</h1>
+          <h3 class="game-subtitle">The 3D Fractions Adventure</h3>
+          <p class="audience-note">A Fun Math Game for Class 3–4 (Ages 8–10)</p>
+        </div>
+
+        <div class="menu-buttons">
+          <button id="btn-play" class="menu-btn primary-menu-btn">▶ Story Campaign (Levels 1–10)</button>
+          <button id="btn-mode-shop" class="menu-btn">🏪 Roti Shop Order Mode</button>
+          <button id="btn-mode-timed" class="menu-btn">⏱️ Timed Fraction Rush</button>
+          <button id="btn-mode-creative" class="menu-btn">🍕 Creative Kitchen (Sandbox)</button>
+          <button id="btn-achievements" class="menu-btn">🏆 Achievements & Badges</button>
+          <button id="btn-level-select" class="menu-btn">🗺️ Select Level</button>
+          <button id="btn-how-to-play" class="menu-btn">📖 How to Play</button>
+          <div class="difficulty-selector-row">
+            <span class="diff-title">Difficulty:</span>
+            <div class="diff-group">
+              <button class="diff-btn active" data-diff="easy">Easy</button>
+              <button class="diff-btn" data-diff="normal">Normal</button>
+              <button class="diff-btn" data-diff="medium">Medium</button>
+              <button class="diff-btn" data-diff="hard">Hard</button>
+            </div>
+          </div>
+          <div class="menu-extra-row">
+            <button id="btn-sound-menu" class="menu-small-btn">Sound: ON 🔊</button>
+            <button id="btn-reset-progress" class="menu-small-btn danger-btn">Reset All Progress</button>
+          </div>
+        </div>
+
+        <div class="menu-footer">
+          <span>Real-Time 3D WebGL • Three.js • Indian Village Kitchen Experience</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Roti Shop Customer Order Card (Docked Top-Center in Shop mode) -->
+    <div id="roti-shop-order-panel" class="shop-order-panel hidden">
+      <div class="customer-avatar" id="shop-customer-avatar">🧑</div>
+      <div class="order-details">
+        <div class="customer-name" id="shop-customer-name">Chintu</div>
+        <div class="order-speech" id="shop-order-speech">"Namaste! I'd like 1/2 of a roti please!"</div>
+        <div class="order-reward">Reward: <span id="shop-reward-coins">30</span> 🪙</div>
+      </div>
+      <button id="btn-shop-serve" class="primary-btn shop-serve-btn">Serve Order ➔</button>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div id="achievements-modal" class="modal hidden">
+      <div class="modal-card large-modal">
+        <div class="modal-header">
+          <h2>🏆 Fraction Achievements & Badges</h2>
+          <button id="btn-close-achievements" class="hud-icon-btn">✕</button>
+        </div>
+        <div class="achievements-list" id="achievements-list-container"></div>
+      </div>
+    </div>
+
+    <!-- Level Selection Grid -->
+    <div id="level-select-modal" class="modal hidden">
+      <div class="modal-card large-modal">
+        <div class="modal-header">
+          <h2>Select Level</h2>
+          <button id="btn-close-levels" class="hud-icon-btn">✕</button>
+        </div>
+        <div class="level-grid" id="level-grid-container"></div>
+      </div>
+    </div>
+
+    <!-- How To Play Modal -->
+    <div id="how-to-play-modal" class="modal hidden">
+      <div class="modal-card large-modal">
+        <div class="modal-header">
+          <h2>📖 How to Play Roti Share</h2>
+          <button id="btn-close-help" class="hud-icon-btn">✕</button>
+        </div>
+        <div class="help-content">
+          <div class="help-step">
+            <div class="step-num">1</div>
+            <div class="step-desc">
+              <h4>🔪 Slice the Roti</h4>
+              <p>Choose how many equal pieces you need, or preview the cut line. Slicing equally creates unit fractions like <strong>1/2, 1/3, 1/4, 1/6, 1/8</strong>.</p>
+            </div>
+          </div>
+          <div class="help-step">
+            <div class="step-num">2</div>
+            <div class="step-desc">
+              <h4>✋ Share to Plates</h4>
+              <p>Click and drag 3D pieces to Chintu's, Meera's, or Golu's plate. Fair sharing means everyone gets the same mathematical fraction!</p>
+            </div>
+          </div>
+          <div class="help-step">
+            <div class="step-num">3</div>
+            <div class="step-desc">
+              <h4>🔄 Rotate the 3D Camera</h4>
+              <p>Drag with mouse or touch to inspect the table from any angle. Use the scroll wheel to zoom into the roti and characters.</p>
+            </div>
+          </div>
+          <div class="help-step">
+            <div class="step-num">4</div>
+            <div class="step-desc">
+              <h4>🌟 Master Fraction Concepts</h4>
+              <p>Explore fair sharing, unit fractions, comparing sizes (1/2 > 1/4), equivalent fractions (1/2 = 2/4), and adding portions!</p>
+            </div>
+          </div>
+        </div>
+        <button id="btn-help-ok" class="primary-btn">Let's Play!</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

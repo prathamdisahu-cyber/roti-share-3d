@@ -1,0 +1,30 @@
+{
+  "name": "roti-share-3d",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Roti Share 3D — Interactive real-time 3D fractions educational game for children built with Three.js and Vite.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node test-check-sharing.mjs && node test-10-levels.mjs"
+  },
+  "dependencies": {
+    "three": "^0.160.0",
+    "canvas-confetti": "^1.9.2"
+  },
+  "devDependencies": {
+    "vite": "^5.0.12"
+  },
+  "keywords": [
+    "threejs",
+    "fractions",
+    "educational-game",
+    "vite",
+    "math-game",
+    "webgl",
+    "3d"
+  ],
+  "license": "MIT"
+}
