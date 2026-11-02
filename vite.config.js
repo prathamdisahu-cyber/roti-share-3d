@@ -9,6 +9,15 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: true
+    sourcemap: true,
+    chunkSizeWarningLimit: 800,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          three: ['three'],
+          confetti: ['canvas-confetti']
+        }
+      }
+    }
   }
 });

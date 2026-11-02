@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node test-check-sharing.mjs && node test-10-levels.mjs"
+    "test": "node test-fractions.mjs && node test-game-initialization.mjs && node test-check-sharing.mjs && node test-10-levels.mjs"
   },
   "dependencies": {
     "three": "^0.160.0",
