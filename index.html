@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="./assets/index-CI2n-8AI.js"></script>
-  <link rel="modulepreload" crossorigin href="./assets/three-ws1bM5D3.js">
+  <script type="module" crossorigin src="./assets/index-CFI9QKKR.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/three-zp-tycCQ.js">
   <link rel="modulepreload" crossorigin href="./assets/confetti-B5JVzsfH.js">
-  <link rel="stylesheet" crossorigin href="./assets/index-CWlE4EHP.css">
+  <link rel="stylesheet" crossorigin href="./assets/index-CJ2g1DkO.css">
 </head>
 <body>
   <!-- 3D WebGL Canvas Layer -->
@@ -90,39 +90,50 @@
 
     <!-- Bottom Controls & Action Bar -->
     <div id="interaction-bar" class="hud-panel">
-      <!-- Equipment Selector Row -->
-      <div class="equipment-toggles">
+      <!-- Hidden technical equipment row to maintain 100% JS API compatibility -->
+      <div class="equipment-toggles hidden">
         <span class="selector-label">Equipment:</span>
-        <button id="tool-knife" class="tool-btn active" data-tool="knife" title="Butter Knife (Radial Cutting)">🔪 Knife</button>
-        <button id="tool-spatula" class="tool-btn" data-tool="spatula" title="Serving Spatula (Sharing to Plates)">🥄 Spatula</button>
-        <button id="tool-measure" class="tool-btn" data-tool="measure" title="Angle & Fraction Measuring Tool">📏 Measure</button>
-        <button id="tool-scale" class="tool-btn" data-tool="scale" title="3D Balance Scale">⚖️ Scale</button>
-        <button id="tool-tiles" class="tool-btn" data-tool="tiles" title="Fraction Tiles Rack">🧩 Tiles</button>
+        <button id="tool-knife" class="tool-btn active" data-tool="knife">🔪 Knife</button>
+        <button id="tool-spatula" class="tool-btn" data-tool="spatula">🥄 Spatula</button>
+        <button id="tool-measure" class="tool-btn" data-tool="measure">📏 Measure</button>
+        <button id="tool-scale" class="tool-btn" data-tool="scale">⚖️ Scale</button>
+        <button id="tool-tiles" class="tool-btn" data-tool="tiles">🧩 Tiles</button>
       </div>
 
-      <div class="mode-toggles">
-        <button id="mode-cut" class="mode-btn active" data-mode="cut">
-          <span class="mode-icon">🔪</span>
-          <span class="mode-text">Slice</span>
-        </button>
-        <button id="mode-move" class="mode-btn" data-mode="move">
-          <span class="mode-icon">✋</span>
-          <span class="mode-text">Share to Plates</span>
-        </button>
-        <button id="mode-camera" class="mode-btn" data-mode="camera">
-          <span class="mode-icon">🔄</span>
-          <span class="mode-text">Look Around</span>
-        </button>
+      <!-- Hidden mode toggles to keep interface clean and child-focused -->
+      <div class="mode-toggles hidden">
+        <button id="mode-cut" class="mode-btn active" data-mode="cut"><span class="mode-icon">🔪</span><span class="mode-text">Slice</span></button>
+        <button id="mode-move" class="mode-btn" data-mode="move"><span class="mode-icon">✋</span><span class="mode-text">Share to Plates</span></button>
+        <button id="mode-camera" class="mode-btn" data-mode="camera"><span class="mode-icon">🔄</span><span class="mode-text">Look Around</span></button>
       </div>
 
-      <!-- Quick Slicing Selector for Radial Division -->
+      <!-- Hero Fraction Cut & Share Controls -->
       <div id="slice-selector" class="slice-selector">
-        <span class="selector-label">Slices:</span>
-        <button class="slice-count-btn active" data-pieces="2"><span class="fraction-pie pie-2"></span>2 (1/2)</button>
-        <button class="slice-count-btn" data-pieces="3"><span class="fraction-pie pie-3"></span>3 (1/3)</button>
-        <button class="slice-count-btn" data-pieces="4"><span class="fraction-pie pie-4"></span>4 (1/4)</button>
-        <button class="slice-count-btn" data-pieces="6"><span class="fraction-pie pie-6"></span>6 (1/6)</button>
-        <button class="slice-count-btn" data-pieces="8"><span class="fraction-pie pie-8"></span>8 (1/8)</button>
+        <div class="fraction-selector-header">
+          <span class="fraction-header-label">🍕 Step 1: Choose Fraction Slices</span>
+        </div>
+        <div class="fraction-buttons-row">
+          <button class="slice-count-btn active" data-pieces="2">
+            <span class="fraction-pie pie-2"></span>
+            <span class="fraction-btn-text"><strong>½</strong> (2 Halves)</span>
+          </button>
+          <button class="slice-count-btn" data-pieces="3">
+            <span class="fraction-pie pie-3"></span>
+            <span class="fraction-btn-text"><strong>⅓</strong> (3 Thirds)</span>
+          </button>
+          <button class="slice-count-btn" data-pieces="4">
+            <span class="fraction-pie pie-4"></span>
+            <span class="fraction-btn-text"><strong>¼</strong> (4 Quarters)</span>
+          </button>
+          <button class="slice-count-btn" data-pieces="6">
+            <span class="fraction-pie pie-6"></span>
+            <span class="fraction-btn-text"><strong>⅙</strong> (6 Sixths)</span>
+          </button>
+          <button class="slice-count-btn" data-pieces="8">
+            <span class="fraction-pie pie-8"></span>
+            <span class="fraction-btn-text"><strong>⅛</strong> (8 Eighths)</span>
+          </button>
+        </div>
         <button id="btn-execute-cut" class="cut-confirm-btn">⚡ Cut & Share Roti</button>
       </div>
 
@@ -137,8 +148,8 @@
 
       <!-- Level Actions -->
       <div id="level-actions" class="level-actions">
-        <button id="btn-reset-level" class="secondary-btn">↺ Reset</button>
-        <button id="btn-check-solution" class="primary-btn">✓ Check Sharing</button>
+        <button id="btn-reset-level" class="secondary-btn">↺ Reset Roti</button>
+        <button id="btn-check-solution" class="primary-btn">✓ Check Fair Share</button>
       </div>
     </div>
 
