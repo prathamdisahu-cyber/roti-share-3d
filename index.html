@@ -65,6 +65,9 @@
           <span class="score-icon">🪙</span>
           <span id="coins-val">0</span>
         </div>
+        <button id="btn-voice" class="hud-icon-btn" title="Toggle Voice Pack" aria-label="Toggle Voice Pack">
+          <span id="voice-icon" class="icon">🗣️</span>
+        </button>
         <button id="btn-sound" class="hud-icon-btn" title="Toggle Sound" aria-label="Toggle Sound">
           <span id="sound-icon" class="icon">🔊</span>
         </button>
@@ -112,11 +115,11 @@
       <!-- Quick Slicing Selector for Radial Division -->
       <div id="slice-selector" class="slice-selector">
         <span class="selector-label">Slices:</span>
-        <button class="slice-count-btn active" data-pieces="2">2 (1/2)</button>
-        <button class="slice-count-btn" data-pieces="3">3 (1/3)</button>
-        <button class="slice-count-btn" data-pieces="4">4 (1/4)</button>
-        <button class="slice-count-btn" data-pieces="6">6 (1/6)</button>
-        <button class="slice-count-btn" data-pieces="8">8 (1/8)</button>
+        <button class="slice-count-btn active" data-pieces="2"><span class="fraction-pie pie-2"></span>2 (1/2)</button>
+        <button class="slice-count-btn" data-pieces="3"><span class="fraction-pie pie-3"></span>3 (1/3)</button>
+        <button class="slice-count-btn" data-pieces="4"><span class="fraction-pie pie-4"></span>4 (1/4)</button>
+        <button class="slice-count-btn" data-pieces="6"><span class="fraction-pie pie-6"></span>6 (1/6)</button>
+        <button class="slice-count-btn" data-pieces="8"><span class="fraction-pie pie-8"></span>8 (1/8)</button>
         <button id="btn-execute-cut" class="cut-confirm-btn">⚡ Cut & Share Roti</button>
       </div>
 
@@ -170,8 +173,19 @@
     <div id="hint-modal" class="hint-drawer hidden">
       <div class="hint-drawer-content">
         <div class="hint-drawer-header">
-          <h4>💡 Teacher's Guide</h4>
-          <button id="btn-close-hint" class="close-tiny-btn">✕</button>
+          <div class="teacher-guide-title">
+            <span class="teacher-avatar">👩‍🏫</span>
+            <div class="teacher-info">
+              <h4>Shanti Ma'am's Guide</h4>
+              <span class="teacher-role">Classroom Educator</span>
+            </div>
+          </div>
+          <div class="hint-header-actions">
+            <button id="btn-speak-hint" class="hud-icon-btn hint-voice-btn" title="Listen to Teacher" aria-label="Listen to Teacher">
+              <span>🔊 Listen</span>
+            </button>
+            <button id="btn-close-hint" class="close-tiny-btn">✕</button>
+          </div>
         </div>
         <p id="hint-text">To share equally between 2 friends, divide into 2 equal parts. Each part is 1/2!</p>
       </div>
@@ -227,6 +241,7 @@
             </div>
           </div>
           <div class="menu-extra-row">
+            <button id="btn-voice-menu" class="menu-small-btn">Voice: ON 🗣️</button>
             <button id="btn-sound-menu" class="menu-small-btn">Sound: ON 🔊</button>
             <button id="btn-reset-progress" class="menu-small-btn danger-btn">Reset All Progress</button>
           </div>

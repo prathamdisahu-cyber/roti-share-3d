@@ -1,19 +1,16 @@
 /**
  * characters.js
  * High-Quality Stylized 3D Cartoon Characters for Roti Share:
- * 1. CHINTU - Expressive, enthusiastic boy in decorated saffron kurta, dynamic eyes with pupils/highlights, styled hair quiff, shoes, animated blinking & joyful celebration.
- * 2. MEERA  - Clever, observant girl in teal/magenta salwar suit, braided hair buns with jasmine flower gajra bands, expressive eyebrows, lively gestures.
- * 3. GOLU   - Hungry, chubby humorous friend in crimson patterned waistcoat, round cheeks, open smiling expression, eager reach animations.
+ * 1. CHINTU  - Enthusiastic boy in saffron kurta, dynamic eyes with pupils/sparkle highlights, styled hair quiff, celebratory jumps.
+ * 2. MEERA   - Clever, cheerful girl in peacock teal salwar suit, dual braided hair buns with white jasmine flower gajra bands, clapping celebrations.
+ * 3. GOLU    - Friendly chubby friend in crimson patterned waistcoat, round cheeks, eager smiles.
+ * 4. TEACHER - Kind, knowledgeable classroom educator (Shanti Ma'am) in elegant Indian Saree with draped pallu, stylish glasses, bindi, graceful pointing gestures and synchronized lip-sync speech!
  *
- * Each character is composed of stylized organic geometry:
- * - Contoured head with chin, cheeks, ears, nose bridge
- * - Layered eyes (white sclera, colorful iris, deep pupil, specular sparkle highlight, blinking eyelids)
- * - Styled hair meshes with volume and tufts
- * - Curved neck and contoured shoulders
- * - Form-fitted torso with collar, buttons/borders
- * - Articulated upper & lower arms, contoured hands with separate fingers/thumbs
- * - Cartoon shoes with soles
- * - Expressive animation controller (breathing, eye blinking, look-at food tracking, celebration jumping, gentle confused tilt)
+ * Real-Time Features:
+ * - Dynamic 3D Lip-Sync speaking animations synchronized with VoiceSystem speech synthesis.
+ * - Organic breathing and idle posture adjustments.
+ * - Natural eye blinking and food look-at tracking.
+ * - Responsive celebration jumping and puzzled error reactions.
  */
 
 import * as THREE from 'three';
@@ -35,7 +32,7 @@ export class CharacterSystem {
     shoeColor = 0x451a03,
     hairColor = 0x1c1917,
     eyeColor = 0x3b2010,
-    gender = 'boy',
+    gender = 'boy', // 'boy', 'girl', or 'teacher'
     scale = 1.0,
     isChubby = false
   }) {
@@ -50,12 +47,13 @@ export class CharacterSystem {
     });
     const clothesMat = new THREE.MeshStandardMaterial({
       color: clothesColor,
-      roughness: 0.7,
+      roughness: 0.65,
       metalness: 0.05
     });
     const accentMat = new THREE.MeshStandardMaterial({
       color: clothesAccent,
-      roughness: 0.65
+      roughness: 0.6,
+      metalness: 0.15
     });
     const pantsMat = new THREE.MeshStandardMaterial({
       color: pantsColor,
@@ -79,49 +77,80 @@ export class CharacterSystem {
     });
     const pupilMat = new THREE.MeshBasicMaterial({ color: 0x050505 });
     const highlightMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const mouthInteriorMat = new THREE.MeshBasicMaterial({ color: 0x831843 });
     const toothMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
     const s = scale;
-    const bodyRadius = isChubby ? 0.54 * s : 0.44 * s;
-    const bodyHeight = 0.95 * s;
+    const isTeacher = gender === 'teacher';
+    const bodyRadius = isTeacher ? 0.38 * s : (isChubby ? 0.54 * s : 0.44 * s);
+    const bodyHeight = isTeacher ? 1.25 * s : 0.95 * s;
 
     // ==========================================
-    // 1. TORSO & WAIST
+    // 1. TORSO, WAIST & CLOTHING
     // ==========================================
     const torsoGroup = new THREE.Group();
     torsoGroup.position.y = 0.85 * s;
 
-    // Contoured Kurta / Vest
-    const torsoGeo = new THREE.CylinderGeometry(
-      bodyRadius * 0.88,
-      bodyRadius * 1.05,
-      bodyHeight,
-      20
-    );
-    const torsoMesh = new THREE.Mesh(torsoGeo, clothesMat);
-    torsoMesh.castShadow = true;
-    torsoMesh.receiveShadow = true;
-    torsoGroup.add(torsoMesh);
+    if (isTeacher) {
+      // Teacher: Elegant Indian Saree drape with blouse and pallu
+      const blouseGeo = new THREE.CylinderGeometry(bodyRadius * 0.85, bodyRadius * 0.98, bodyHeight * 0.55, 20);
+      const blouse = new THREE.Mesh(blouseGeo, clothesMat);
+      blouse.position.y = bodyHeight * 0.22;
+      blouse.castShadow = true;
+      torsoGroup.add(blouse);
 
-    // Decorative Front Placket & Golden Buttons
-    const placketGeo = new THREE.BoxGeometry(0.08 * s, bodyHeight * 0.75, 0.03 * s);
-    const placket = new THREE.Mesh(placketGeo, accentMat);
-    placket.position.set(0, 0.1 * s, bodyRadius * 0.95);
-    torsoGroup.add(placket);
+      // Saree skirt drape (pleats reaching down)
+      const sareeGeo = new THREE.CylinderGeometry(bodyRadius * 0.95, bodyRadius * 1.35, bodyHeight * 0.9, 20);
+      const saree = new THREE.Mesh(sareeGeo, accentMat);
+      saree.position.y = -bodyHeight * 0.32;
+      saree.castShadow = true;
+      torsoGroup.add(saree);
 
-    for (let b = 0; b < 3; b++) {
-      const buttonGeo = new THREE.SphereGeometry(0.025 * s, 8, 8);
-      const button = new THREE.Mesh(buttonGeo, new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.8, roughness: 0.2 }));
-      button.position.set(0, (0.25 - b * 0.18) * s, bodyRadius * 0.98);
-      torsoGroup.add(button);
+      // Golden Zari Border at bottom of Saree
+      const borderGeo = new THREE.CylinderGeometry(bodyRadius * 1.36, bodyRadius * 1.37, 0.08 * s, 20);
+      const border = new THREE.Mesh(borderGeo, new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.8, roughness: 0.25 }));
+      border.position.y = -bodyHeight * 0.72;
+      torsoGroup.add(border);
+
+      // Saree Pallu draped diagonally across chest over left shoulder
+      const palluGeo = new THREE.BoxGeometry(0.24 * s, bodyHeight * 0.85, 0.06 * s);
+      const pallu = new THREE.Mesh(palluGeo, accentMat);
+      pallu.position.set(-0.12 * s, 0.1 * s, bodyRadius * 0.92);
+      pallu.rotation.z = -0.38;
+      pallu.rotation.y = 0.15;
+      torsoGroup.add(pallu);
+
+    } else {
+      // Contoured Kurta / Vest for Kids
+      const torsoGeo = new THREE.CylinderGeometry(
+        bodyRadius * 0.88,
+        bodyRadius * 1.05,
+        bodyHeight,
+        20
+      );
+      const torsoMesh = new THREE.Mesh(torsoGeo, clothesMat);
+      torsoMesh.castShadow = true;
+      torsoMesh.receiveShadow = true;
+      torsoGroup.add(torsoMesh);
+
+      // Decorative Front Placket & Golden Buttons
+      const placketGeo = new THREE.BoxGeometry(0.08 * s, bodyHeight * 0.75, 0.03 * s);
+      const placket = new THREE.Mesh(placketGeo, accentMat);
+      placket.position.set(0, 0.1 * s, bodyRadius * 0.95);
+      torsoGroup.add(placket);
+
+      for (let b = 0; b < 3; b++) {
+        const buttonGeo = new THREE.SphereGeometry(0.025 * s, 8, 8);
+        const button = new THREE.Mesh(buttonGeo, new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.8, roughness: 0.2 }));
+        button.position.set(0, (0.25 - b * 0.18) * s, bodyRadius * 0.98);
+        torsoGroup.add(button);
+      }
+
+      // Traditional Collar (Nehru collar band)
+      const collarGeo = new THREE.CylinderGeometry(0.24 * s, 0.26 * s, 0.14 * s, 16);
+      const collar = new THREE.Mesh(collarGeo, accentMat);
+      collar.position.y = bodyHeight / 2 + 0.05 * s;
+      torsoGroup.add(collar);
     }
-
-    // Traditional Collar (Nehru collar band)
-    const collarGeo = new THREE.CylinderGeometry(0.24 * s, 0.26 * s, 0.14 * s, 16);
-    const collar = new THREE.Mesh(collarGeo, accentMat);
-    collar.position.y = bodyHeight / 2 + 0.05 * s;
-    torsoGroup.add(collar);
 
     root.add(torsoGroup);
 
@@ -129,17 +158,19 @@ export class CharacterSystem {
     // 2. HEAD & FACIAL FEATURES
     // ==========================================
     const headPivot = new THREE.Group();
-    headPivot.position.y = 1.48 * s;
+    headPivot.position.y = (isTeacher ? 1.85 : 1.48) * s;
 
     // Neck
-    const neckGeo = new THREE.CylinderGeometry(0.18 * s, 0.2 * s, 0.2 * s, 14);
+    const neckRadius = isTeacher ? 0.15 * s : 0.18 * s;
+    const neckGeo = new THREE.CylinderGeometry(neckRadius, neckRadius * 1.1, 0.22 * s, 14);
     const neckMesh = new THREE.Mesh(neckGeo, skinMat);
-    neckMesh.position.y = -0.08 * s;
+    neckMesh.position.y = -0.09 * s;
     headPivot.add(neckMesh);
 
     // Cranium / Face (organic rounded shape with sculpted cheeks)
+    const headScaleY = isTeacher ? 1.14 : 1.08;
     const craniumGeo = new THREE.SphereGeometry(0.48 * s, 28, 24);
-    craniumGeo.scale(1.0, 1.08, 1.02);
+    craniumGeo.scale(1.0, headScaleY, 1.02);
     const cranium = new THREE.Mesh(craniumGeo, skinMat);
     cranium.castShadow = true;
     headPivot.add(cranium);
@@ -193,7 +224,7 @@ export class CharacterSystem {
       pupil.position.set(0, 0, 0.06 * s);
       eyeGrp.add(pupil);
 
-      // Sparkle Highlights (gives lively Disney/Pixar anime eyes)
+      // Sparkle Highlights (gives lively Disney/Pixar cartoon eyes)
       const shineGeo1 = new THREE.CircleGeometry(0.016 * s, 8);
       const shine1 = new THREE.Mesh(shineGeo1, highlightMat);
       shine1.position.set(0.015 * s, 0.018 * s, 0.062 * s);
@@ -225,6 +256,41 @@ export class CharacterSystem {
       headPivot.add(eyeGrp);
     });
 
+    // Traditional Bindi for Meera and Teacher
+    if (gender === 'girl' || isTeacher) {
+      const bindiGeo = new THREE.CircleGeometry(isTeacher ? 0.038 * s : 0.028 * s, 12);
+      const bindiMat = new THREE.MeshBasicMaterial({ color: 0x991b1b }); // Deep crimson
+      const bindi = new THREE.Mesh(bindiGeo, bindiMat);
+      bindi.position.set(0, 0.16 * s, 0.49 * s);
+      headPivot.add(bindi);
+    }
+
+    // Teacher Spectacles (Stylish round thin-frame glasses)
+    if (isTeacher) {
+      const glassesGroup = new THREE.Group();
+      glassesGroup.position.set(0, eyeHeight, eyeDepth + 0.035 * s);
+
+      const frameMat = new THREE.MeshStandardMaterial({ color: 0xb45309, metalness: 0.85, roughness: 0.3 });
+      const rimGeo = new THREE.TorusGeometry(0.092 * s, 0.012 * s, 8, 20);
+
+      const leftRim = new THREE.Mesh(rimGeo, frameMat);
+      leftRim.position.x = -eyeSpacing;
+      glassesGroup.add(leftRim);
+
+      const rightRim = new THREE.Mesh(rimGeo, frameMat);
+      rightRim.position.x = eyeSpacing;
+      glassesGroup.add(rightRim);
+
+      // Glasses bridge
+      const bridgeGeo = new THREE.CylinderGeometry(0.01 * s, 0.01 * s, eyeSpacing, 8);
+      const bridge = new THREE.Mesh(bridgeGeo, frameMat);
+      bridge.rotation.z = Math.PI / 2;
+      bridge.position.y = 0.02 * s;
+      glassesGroup.add(bridge);
+
+      headPivot.add(glassesGroup);
+    }
+
     // Rosy Cheeks
     const blushGeo = new THREE.CircleGeometry(0.09 * s, 14);
     const blushMat = new THREE.MeshBasicMaterial({ color: 0xf87171, transparent: true, opacity: 0.55 });
@@ -237,7 +303,7 @@ export class CharacterSystem {
     headPivot.add(blushL);
     headPivot.add(blushR);
 
-    // Expressive Smiling Mouth
+    // Expressive Smiling Mouth (Animated during Lip-Sync)
     const mouthGroup = new THREE.Group();
     mouthGroup.position.set(0, -0.16 * s, 0.45 * s);
 
@@ -258,7 +324,26 @@ export class CharacterSystem {
     // ==========================================
     // 3. HAIR STYLES
     // ==========================================
-    if (gender === 'girl') {
+    if (isTeacher) {
+      // Teacher: Elegant sleek low bun (Jooda) with golden pin
+      const hairBaseGeo = new THREE.SphereGeometry(0.51 * s, 20, 20, 0, Math.PI * 2, 0, Math.PI / 1.7);
+      const hairBase = new THREE.Mesh(hairBaseGeo, hairMat);
+      hairBase.position.y = 0.04 * s;
+      headPivot.add(hairBase);
+
+      const bunGeo = new THREE.SphereGeometry(0.28 * s, 18, 18);
+      const bun = new THREE.Mesh(bunGeo, hairMat);
+      bun.position.set(0, 0.12 * s, -0.42 * s);
+      headPivot.add(bun);
+
+      const hairPinGeo = new THREE.CylinderGeometry(0.015 * s, 0.015 * s, 0.45 * s, 8);
+      const pinMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9, roughness: 0.2 });
+      const pin = new THREE.Mesh(hairPinGeo, pinMat);
+      pin.position.set(0, 0.15 * s, -0.42 * s);
+      pin.rotation.z = Math.PI / 4;
+      headPivot.add(pin);
+
+    } else if (gender === 'girl') {
       // Meera: Sleek part, elegant twin buns with golden jasmine flower rings
       const hairBaseGeo = new THREE.SphereGeometry(0.51 * s, 20, 20, 0, Math.PI * 2, 0, Math.PI / 1.7);
       const hairBase = new THREE.Mesh(hairBaseGeo, hairMat);
@@ -324,35 +409,34 @@ export class CharacterSystem {
     // 4. ARMS & DETAILED HANDS
     // ==========================================
     const shoulderSpan = (bodyRadius * 0.95 + 0.12 * s);
+    const armY = (isTeacher ? 1.55 : 1.25) * s;
 
     // Left Arm Hierarchy (Shoulder -> Upper Arm -> Forearm -> Hand)
     const leftArmGroup = new THREE.Group();
-    leftArmGroup.position.set(-shoulderSpan, 1.25 * s, 0);
+    leftArmGroup.position.set(-shoulderSpan, armY, 0);
 
-    const upperArmGeo = new THREE.CylinderGeometry(0.1 * s, 0.09 * s, 0.42 * s, 12);
+    const upperArmGeo = new THREE.CylinderGeometry(0.09 * s, 0.08 * s, 0.45 * s, 12);
     const upperArmL = new THREE.Mesh(upperArmGeo, clothesMat);
-    upperArmL.position.y = -0.21 * s;
+    upperArmL.position.y = -0.22 * s;
     upperArmL.castShadow = true;
     leftArmGroup.add(upperArmL);
 
-    // Forearm & Hand Pivot
     const forearmGroupL = new THREE.Group();
-    forearmGroupL.position.set(0, -0.42 * s, 0);
+    forearmGroupL.position.set(0, -0.45 * s, 0);
 
-    const forearmGeo = new THREE.CylinderGeometry(0.085 * s, 0.075 * s, 0.38 * s, 12);
+    const forearmGeo = new THREE.CylinderGeometry(0.08 * s, 0.07 * s, 0.4 * s, 12);
     const forearmL = new THREE.Mesh(forearmGeo, skinMat);
-    forearmL.position.y = -0.19 * s;
+    forearmL.position.y = -0.2 * s;
     forearmGroupL.add(forearmL);
 
-    // Sculpted cartoon hand
-    const palmGeo = new THREE.BoxGeometry(0.12 * s, 0.12 * s, 0.06 * s);
+    const palmGeo = new THREE.BoxGeometry(0.11 * s, 0.11 * s, 0.05 * s);
     const palmL = new THREE.Mesh(palmGeo, skinMat);
-    palmL.position.y = -0.42 * s;
+    palmL.position.y = -0.44 * s;
     forearmGroupL.add(palmL);
 
-    const thumbGeo = new THREE.CylinderGeometry(0.025 * s, 0.025 * s, 0.08 * s, 8);
+    const thumbGeo = new THREE.CylinderGeometry(0.024 * s, 0.024 * s, 0.08 * s, 8);
     const thumbL = new THREE.Mesh(thumbGeo, skinMat);
-    thumbL.position.set(0.06 * s, -0.4 * s, 0.02 * s);
+    thumbL.position.set(0.055 * s, -0.42 * s, 0.02 * s);
     thumbL.rotation.z = -Math.PI / 4;
     forearmGroupL.add(thumbL);
 
@@ -361,52 +445,63 @@ export class CharacterSystem {
 
     // Right Arm Hierarchy
     const rightArmGroup = new THREE.Group();
-    rightArmGroup.position.set(shoulderSpan, 1.25 * s, 0);
+    rightArmGroup.position.set(shoulderSpan, armY, 0);
 
     const upperArmR = new THREE.Mesh(upperArmGeo, clothesMat);
-    upperArmR.position.y = -0.21 * s;
+    upperArmR.position.y = -0.22 * s;
     upperArmR.castShadow = true;
     rightArmGroup.add(upperArmR);
 
     const forearmGroupR = new THREE.Group();
-    forearmGroupR.position.set(0, -0.42 * s, 0);
+    forearmGroupR.position.set(0, -0.45 * s, 0);
 
     const forearmR = new THREE.Mesh(forearmGeo, skinMat);
-    forearmR.position.y = -0.19 * s;
+    forearmR.position.y = -0.2 * s;
     forearmGroupR.add(forearmR);
 
     const palmR = new THREE.Mesh(palmGeo, skinMat);
-    palmR.position.y = -0.42 * s;
+    palmR.position.y = -0.44 * s;
     forearmGroupR.add(palmR);
 
     const thumbR = new THREE.Mesh(thumbGeo, skinMat);
-    thumbR.position.set(-0.06 * s, -0.4 * s, 0.02 * s);
+    thumbR.position.set(-0.055 * s, -0.42 * s, 0.02 * s);
     thumbR.rotation.z = Math.PI / 4;
     forearmGroupR.add(thumbR);
 
     rightArmGroup.add(forearmGroupR);
     root.add(rightArmGroup);
 
+    // Teacher Pointer Stick / Notebook
+    if (isTeacher) {
+      const pointerGeo = new THREE.CylinderGeometry(0.012 * s, 0.008 * s, 0.75 * s, 8);
+      const pointerMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.3 });
+      const pointer = new THREE.Mesh(pointerGeo, pointerMat);
+      pointer.position.set(0, -0.5 * s, 0.22 * s);
+      pointer.rotation.x = Math.PI / 3;
+      forearmGroupR.add(pointer);
+    }
+
     // ==========================================
-    // 5. LEGS & STYLISH CARTOON SHOES
+    // 5. LEGS & FOOTWEAR
     // ==========================================
     const legSpacing = 0.22 * s;
-    const legGeo = new THREE.CylinderGeometry(0.12 * s, 0.1 * s, 0.65 * s, 12);
+    const legLength = (isTeacher ? 0.95 : 0.65) * s;
+    const legGeo = new THREE.CylinderGeometry(0.12 * s, 0.1 * s, legLength, 12);
 
     // Left Leg
-    const legL = new THREE.Mesh(legGeo, pantsMat);
-    legL.position.set(-legSpacing, 0.35 * s, 0);
+    const legL = new THREE.Mesh(legGeo, isTeacher ? accentMat : pantsMat);
+    legL.position.set(-legSpacing, legLength / 2, 0);
     legL.castShadow = true;
     root.add(legL);
 
     // Right Leg
-    const legR = new THREE.Mesh(legGeo, pantsMat);
-    legR.position.set(legSpacing, 0.35 * s, 0);
+    const legR = new THREE.Mesh(legGeo, isTeacher ? accentMat : pantsMat);
+    legR.position.set(legSpacing, legLength / 2, 0);
     legR.castShadow = true;
     root.add(legR);
 
-    // Shoes with defined soles (Juttis / Loafers)
-    const shoeGeo = new THREE.BoxGeometry(0.18 * s, 0.12 * s, 0.32 * s);
+    // Shoes with defined soles (Juttis / Sandals)
+    const shoeGeo = new THREE.BoxGeometry(0.18 * s, 0.11 * s, 0.32 * s);
     const soleGeo = new THREE.BoxGeometry(0.19 * s, 0.03 * s, 0.34 * s);
     const soleMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.9 });
 
@@ -427,6 +522,8 @@ export class CharacterSystem {
 
     return {
       group: root,
+      name,
+      gender,
       headPivot,
       mouthGroup,
       leftArmGroup,
@@ -439,7 +536,9 @@ export class CharacterSystem {
       state: 'idle',
       animTime: Math.random() * 10,
       blinkTimer: 2 + Math.random() * 3,
-      isBlinking: false
+      isBlinking: false,
+      isSpeaking: false,
+      speechTimer: 0
     };
   }
 
@@ -495,10 +594,43 @@ export class CharacterSystem {
     golu.group.rotation.y = 0;
     this.scene.add(golu.group);
     this.characters['golu'] = golu;
+
+    // 4. TEACHER (Shanti Ma'am) - Warm classroom teacher in Mustard-Gold & Maroon Indian Saree
+    const teacher = this.createStylizedCharacter({
+      name: 'Teacher',
+      skinColor: 0xe6a36f,
+      clothesColor: 0xd97706, // Warm mustard blouse
+      clothesAccent: 0x991b1b, // Rich maroon saree with gold zari
+      pantsColor: 0x7f1d1d,
+      hairColor: 0x18181b,
+      eyeColor: 0x451a03,
+      gender: 'teacher',
+      scale: 1.35
+    });
+    teacher.group.position.set(-3.5, -0.15, -1.3);
+    teacher.group.rotation.y = Math.PI / 4.2;
+    this.scene.add(teacher.group);
+    this.characters['teacher'] = teacher;
   }
 
   setFocusTarget(pos) {
     if (pos) this.targetFocus.copy(pos);
+  }
+
+  startSpeaking(charKey) {
+    const char = this.characters[charKey];
+    if (char) {
+      char.isSpeaking = true;
+      char.speechTimer = 0;
+    }
+  }
+
+  stopSpeaking(charKey) {
+    const char = this.characters[charKey];
+    if (char) {
+      char.isSpeaking = false;
+      char.mouthGroup.scale.set(1.0, 1.0, 1.0);
+    }
   }
 
   setEmotion(charKey, emotion = 'idle') {
@@ -524,7 +656,10 @@ export class CharacterSystem {
   }
 
   resetAll() {
-    Object.keys(this.characters).forEach(key => this.setEmotion(key, 'idle'));
+    Object.keys(this.characters).forEach(key => {
+      this.setEmotion(key, 'idle');
+      this.stopSpeaking(key);
+    });
   }
 
   update(delta) {
@@ -546,6 +681,50 @@ export class CharacterSystem {
         }
       }
 
+      // Synchronized Lip-Sync Mouth Animation during Speech
+      if (char.isSpeaking) {
+        char.speechTimer += delta * 15;
+        const mouthOpen = 1.0 + Math.abs(Math.sin(char.speechTimer)) * 0.95;
+        char.mouthGroup.scale.set(1.0, mouthOpen, 1.0);
+      } else if (char.state === 'idle') {
+        char.mouthGroup.scale.set(1.0, 1.0, 1.0);
+      }
+
+      // Teacher-specific pedagogical gestures
+      if (char.gender === 'teacher') {
+        if (char.isSpeaking) {
+          // Pointing gracefully towards the table while speaking
+          char.headPivot.rotation.x = 0.05 + Math.sin(t * 3) * 0.04;
+          char.headPivot.rotation.y = 0.12 + Math.sin(t * 2) * 0.06;
+          char.rightArmGroup.rotation.x = 0.85 + Math.sin(t * 2.5) * 0.08;
+          char.rightArmGroup.rotation.z = -0.25;
+          char.forearmGroupR.rotation.x = -0.35;
+          char.leftArmGroup.rotation.x = 0.25;
+          char.leftArmGroup.rotation.z = 0.2;
+        } else if (char.state === 'happy') {
+          // Warm smiling approval & proud hands together / namaste nod
+          char.headPivot.rotation.x = 0.12 + Math.sin(t * 5) * 0.05;
+          char.rightArmGroup.rotation.x = 0.65;
+          char.rightArmGroup.rotation.z = -0.3;
+          char.forearmGroupR.rotation.x = -0.7;
+          char.leftArmGroup.rotation.x = 0.65;
+          char.leftArmGroup.rotation.z = 0.3;
+          char.forearmGroupL.rotation.x = -0.7;
+        } else {
+          // Calm standing poise
+          char.headPivot.position.y = 1.85 * char.scale + Math.sin(t * 1.5) * 0.015;
+          char.headPivot.rotation.x = 0.08 + Math.sin(t * 1.2) * 0.02;
+          char.rightArmGroup.rotation.x = 0.35 + Math.sin(t * 1.5) * 0.03;
+          char.rightArmGroup.rotation.z = -0.22;
+          char.forearmGroupR.rotation.x = -0.4;
+          char.leftArmGroup.rotation.x = 0.25;
+          char.leftArmGroup.rotation.z = 0.18;
+          char.forearmGroupL.rotation.x = -0.4;
+        }
+        return;
+      }
+
+      // Student Reactions (Chintu, Meera, Golu)
       if (char.state === 'idle') {
         // Natural organic breathing (chest expansion & head rhythm)
         char.headPivot.position.y = 1.48 * char.scale + Math.sin(t * 1.8) * 0.025;
@@ -571,14 +750,24 @@ export class CharacterSystem {
         char.headPivot.rotation.x = -0.15 + Math.sin(t * 6) * 0.08;
         char.headPivot.rotation.z = Math.sin(t * 8) * 0.12;
 
-        // Wave arms high in victory
-        char.leftArmGroup.rotation.z = 2.4 + Math.sin(t * 9) * 0.3;
-        char.leftArmGroup.rotation.x = 0.2;
-        char.forearmGroupL.rotation.x = -0.3;
+        if (char.gender === 'girl') {
+          // Meera claps hands joyfully
+          char.leftArmGroup.rotation.x = 0.8 + Math.sin(t * 12) * 0.15;
+          char.leftArmGroup.rotation.z = 0.45;
+          char.forearmGroupL.rotation.x = -0.8;
+          char.rightArmGroup.rotation.x = 0.8 + Math.sin(t * 12) * 0.15;
+          char.rightArmGroup.rotation.z = -0.45;
+          char.forearmGroupR.rotation.x = -0.8;
+        } else {
+          // Chintu waves arms high in victory
+          char.leftArmGroup.rotation.z = 2.4 + Math.sin(t * 9) * 0.3;
+          char.leftArmGroup.rotation.x = 0.2;
+          char.forearmGroupL.rotation.x = -0.3;
 
-        char.rightArmGroup.rotation.z = -2.4 - Math.sin(t * 9) * 0.3;
-        char.rightArmGroup.rotation.x = 0.2;
-        char.forearmGroupR.rotation.x = -0.3;
+          char.rightArmGroup.rotation.z = -2.4 - Math.sin(t * 9) * 0.3;
+          char.rightArmGroup.rotation.x = 0.2;
+          char.forearmGroupR.rotation.x = -0.3;
+        }
 
         // Cheerful raised eyebrows
         char.leftEyeGroup.userData.brow.rotation.z = 0.22;

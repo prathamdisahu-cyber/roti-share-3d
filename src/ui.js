@@ -105,6 +105,26 @@ export class SoundManager {
     osc.stop(this.audioCtx.currentTime + 0.15);
   }
 
+  playPlateClink() {
+    if (!this.enabled) return;
+    this.initAudio();
+    if (!this.audioCtx) return;
+
+    const osc = this.audioCtx.createOscillator();
+    const gain = this.audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1420, this.audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(780, this.audioCtx.currentTime + 0.12);
+
+    gain.gain.setValueAtTime(0.22, this.audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.12);
+
+    osc.connect(gain);
+    gain.connect(this.audioCtx.destination);
+    osc.start();
+    osc.stop(this.audioCtx.currentTime + 0.12);
+  }
+
   playSuccess() {
     if (!this.enabled) return;
     this.initAudio();
@@ -167,6 +187,8 @@ export class UIManager {
     this.elTimerBadge = document.getElementById('timer-badge');
     this.elTimerVal = document.getElementById('timer-val');
     this.elStarsDisplay = document.getElementById('stars-display');
+    this.btnVoice = document.getElementById('btn-voice');
+    this.voiceIcon = document.getElementById('voice-icon');
     this.btnSound = document.getElementById('btn-sound');
     this.soundIcon = document.getElementById('sound-icon');
     this.btnCameraReset = document.getElementById('btn-camera-reset');
@@ -218,6 +240,7 @@ export class UIManager {
     // Modals
     this.hintModal = document.getElementById('hint-modal');
     this.hintText = document.getElementById('hint-text');
+    this.btnSpeakHint = document.getElementById('btn-speak-hint');
     this.btnCloseHint = document.getElementById('btn-close-hint');
 
     this.successModal = document.getElementById('success-modal');
@@ -236,6 +259,7 @@ export class UIManager {
     this.btnAchievements = document.getElementById('btn-achievements');
     this.btnLevelSelect = document.getElementById('btn-level-select');
     this.btnHowToPlay = document.getElementById('btn-how-to-play');
+    this.btnVoiceMenu = document.getElementById('btn-voice-menu');
     this.btnSoundMenu = document.getElementById('btn-sound-menu');
     this.btnResetProgress = document.getElementById('btn-reset-progress');
     this.diffButtons = document.querySelectorAll('.diff-btn');
@@ -254,6 +278,21 @@ export class UIManager {
   }
 
   bindEvents() {
+    // Voice Toggle
+    const handleVoiceToggle = () => {
+      if (!this.game.voice) return;
+      const active = this.game.voice.toggle();
+      if (this.voiceIcon) this.voiceIcon.textContent = active ? '🗣️' : '🔇';
+      if (this.btnVoiceMenu) this.btnVoiceMenu.textContent = active ? 'Voice: ON 🗣️' : 'Voice: OFF 🔇';
+      this.showToast(active ? "Voice Pack Enabled 🗣️" : "Voice Pack Muted 🔇", "🎙️");
+      if (active) {
+        this.sound.playClick();
+        this.game.voice.speak("Voice pack enabled. Let's learn fractions together!", "teacher");
+      }
+    };
+    if (this.btnVoice) this.btnVoice.addEventListener('click', handleVoiceToggle);
+    if (this.btnVoiceMenu) this.btnVoiceMenu.addEventListener('click', handleVoiceToggle);
+
     // Sound Toggle
     const handleSoundToggle = () => {
       const active = this.sound.toggle();
@@ -425,9 +464,19 @@ export class UIManager {
       this.sound.playClick();
       this.showHint();
     });
+    if (this.btnSpeakHint) {
+      this.btnSpeakHint.addEventListener('click', () => {
+        this.sound.playClick();
+        const lvl = this.game.getCurrentLevel();
+        if (this.game.voice && lvl && lvl.hint) {
+          this.game.voice.speakTeacherHint(lvl.hint);
+        }
+      });
+    }
     this.btnCloseHint.addEventListener('click', () => {
       this.sound.playClick();
       this.hintModal.classList.add('hidden');
+      if (this.game.voice) this.game.voice.stop();
     });
 
     // Success Modal Controls
@@ -719,6 +768,9 @@ export class UIManager {
     const lvl = this.game.getCurrentLevel();
     this.hintText.textContent = lvl.hint;
     this.hintModal.classList.remove('hidden');
+    if (this.game.voice && lvl && lvl.hint) {
+      this.game.voice.speakTeacherHint(lvl.hint);
+    }
   }
 
   showSuccessModal(stars = 3, explanation = "", title = "Level Complete! 🎉") {
