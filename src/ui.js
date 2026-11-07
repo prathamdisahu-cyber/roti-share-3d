@@ -595,11 +595,19 @@ export class UIManager {
   showMainMenu() {
     this.mainMenu.classList.remove('hidden');
     this.game.isMenuOpen = true;
+    if (this.game.characterSystem) {
+      this.game.characterSystem.setEmotion('chintu', 'greeting');
+      this.game.characterSystem.setEmotion('meera', 'greeting');
+    }
   }
 
   hideMainMenu() {
     this.mainMenu.classList.add('hidden');
     this.game.isMenuOpen = false;
+    if (this.game.characterSystem) {
+      this.game.characterSystem.setEmotion('chintu', 'idle');
+      this.game.characterSystem.setEmotion('meera', 'idle');
+    }
   }
 
   showHowToPlay(fromMenu = false) {

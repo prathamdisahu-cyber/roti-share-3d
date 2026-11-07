@@ -2356,11 +2356,11 @@ export class RotiShareGame {
     const delta = this.clock.getDelta();
 
     if (this.isMenuOpen) {
-      const t = this.clock.getElapsedTime() * 0.22;
-      this.camera.position.x = Math.sin(t) * 5.4;
-      this.camera.position.z = Math.cos(t) * 5.4;
-      this.camera.position.y = 3.9 + Math.sin(t * 0.5) * 0.35;
-      this.camera.lookAt(0, 0.45, 0);
+      const t = this.clock.getElapsedTime() * 0.16;
+      this.camera.position.x = 1.3 + Math.sin(t) * 2.8;
+      this.camera.position.z = 4.8 + Math.cos(t) * 1.2;
+      this.camera.position.y = 3.6 + Math.sin(t * 0.4) * 0.22;
+      this.camera.lookAt(0.5, 0.45, 0);
     } else {
       this.controls.update();
     }

@@ -608,6 +608,8 @@ export class CharacterSystem {
 
     // Initially show ONLY Chintu and Meera for the starting level
     this.setActiveCharacters(['Chintu', 'Meera']);
+    this.setEmotion('chintu', 'greeting');
+    this.setEmotion('meera', 'greeting');
   }
 
   /**
@@ -703,6 +705,8 @@ export class CharacterSystem {
 
     if (emotion === 'happy') {
       char.mouthGroup.scale.set(1.2, 1.3, 1.0);
+    } else if (emotion === 'greeting') {
+      char.mouthGroup.scale.set(1.15, 1.25, 1.0);
     } else if (emotion === 'confused') {
       char.mouthGroup.scale.set(0.8, 0.7, 1.0);
     } else {
@@ -841,6 +845,38 @@ export class CharacterSystem {
         char.rightArmGroup.rotation.x = 0.9 + Math.sin(t * 4) * 0.08;
         char.rightArmGroup.rotation.z = -0.35;
         char.forearmGroupR.rotation.x = -0.8;
+
+      } else if (char.state === 'greeting') {
+        // Welcoming friendly wave to the player on the home page!
+        char.headPivot.position.y = 0.75 * char.scale + Math.sin(t * 1.8) * 0.012;
+        char.headPivot.rotation.x = 0.04;
+        char.headPivot.rotation.y = (key === 'chintu' ? -0.25 : 0.25) + Math.sin(t * 1.5) * 0.06;
+        char.headPivot.rotation.z = Math.sin(t * 2.5) * 0.04;
+
+        char.mouthGroup.scale.set(1.15, 1.25, 1.0);
+
+        if (key === 'chintu') {
+          // Chintu waves with right arm
+          char.rightArmGroup.rotation.z = -1.75 - Math.sin(t * 7) * 0.25;
+          char.rightArmGroup.rotation.x = 0.35;
+          char.forearmGroupR.rotation.x = -0.55;
+
+          char.leftArmGroup.rotation.z = 0.3;
+          char.leftArmGroup.rotation.x = 0.42;
+          char.forearmGroupL.rotation.x = -0.65;
+        } else {
+          // Meera waves with left arm
+          char.leftArmGroup.rotation.z = 1.75 + Math.sin(t * 7) * 0.25;
+          char.leftArmGroup.rotation.x = 0.35;
+          char.forearmGroupL.rotation.x = -0.55;
+
+          char.rightArmGroup.rotation.z = -0.3;
+          char.rightArmGroup.rotation.x = 0.42;
+          char.forearmGroupR.rotation.x = -0.65;
+        }
+
+        char.leftEyeGroup.userData.brow.rotation.z = 0.16;
+        char.rightEyeGroup.userData.brow.rotation.z = -0.16;
       }
     });
   }
