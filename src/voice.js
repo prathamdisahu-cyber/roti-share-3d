@@ -232,3 +232,4 @@ export class VoiceSystem {
     this.speak(`Here's a helpful hint: ${hintText}`, 'teacher');
   }
 }
+

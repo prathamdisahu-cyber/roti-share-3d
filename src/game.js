@@ -937,7 +937,9 @@ export class RotiShareGame {
     this.characterSystem.resetAll();
     this.resetCamera();
 
-    this.setupPlates(levelData.friends || []);
+    const activeFriends = levelData.friends && levelData.friends.length ? levelData.friends : ['Chintu', 'Meera'];
+    this.setupPlates(activeFriends);
+    this.characterSystem.setActiveCharacters(activeFriends);
 
     if (levelData.foodType === 'laddoo') {
       this.setupLaddooFood(levelData);
@@ -1036,14 +1038,21 @@ export class RotiShareGame {
   }
 
   setupPlates(friendsList) {
+    const count = friendsList.length;
     const plateCoords = {
-      'Chintu': new THREE.Vector3(-1.8, 0.03, 0.8),
-      'Meera': new THREE.Vector3(1.8, 0.03, 0.8),
-      'Golu': new THREE.Vector3(0, 0.03, -1.2)
+      'Chintu': new THREE.Vector3(-1.8, 0.03, 0.65),
+      'Meera': new THREE.Vector3(1.8, 0.03, 0.65),
+      'Golu': count <= 3 ? new THREE.Vector3(0, 0.03, -1.25) : new THREE.Vector3(-1.1, 0.03, -1.25),
+      'Priya': new THREE.Vector3(1.1, 0.03, -1.25),
+      'Kabir': new THREE.Vector3(0, 0.03, -1.25)
     };
 
+    if (count === 1) {
+      plateCoords[friendsList[0]] = new THREE.Vector3(0, 0.03, 0.85);
+    }
+
     friendsList.forEach(name => {
-      const pos = plateCoords[name] || new THREE.Vector3(0, 0.03, 1.2);
+      const pos = plateCoords[name] || new THREE.Vector3(0, 0.03, 0.85);
       const plate = createPlate(`${name}'s Plate`);
       plate.position.copy(pos);
       plate.userData.friendName = name;
@@ -2094,6 +2103,7 @@ export class RotiShareGame {
     this.clearFoodScene();
 
     this.setupPlates([order.customer]);
+    this.characterSystem.setActiveCharacters([order.customer]);
     this.setupStandardRotiFood({ type: 'sharing', initialPieces: 1 });
 
     this.ui.showShopOrder(order);
@@ -2162,6 +2172,7 @@ export class RotiShareGame {
     this.creativeFoodType = foodType;
     this.clearFoodScene();
     this.setupPlates(['Chintu', 'Meera', 'Golu']);
+    this.characterSystem.setActiveCharacters(['Chintu', 'Meera', 'Golu']);
     if (foodType === 'laddoo') {
       this.setupLaddooFood({ totalItems: 6 });
     } else {
