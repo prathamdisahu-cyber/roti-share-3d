@@ -200,8 +200,8 @@ export class RotiShareGame {
 
   initScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xffedd5); // Soft warm peach morning sky
-    this.scene.fog = new THREE.FogExp2(0xfef3c7, 0.02);
+    this.scene.background = new THREE.Color(0xfefce8); // Bright, warm, cheerful sunny morning sky
+    this.scene.fog = new THREE.FogExp2(0xfef9c3, 0.012);
 
     const aspect = window.innerWidth / window.innerHeight;
     this.camera = new THREE.PerspectiveCamera(42, aspect, 0.1, 100);
@@ -218,7 +218,7 @@ export class RotiShareGame {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.2;
+    this.renderer.toneMappingExposure = 1.25;
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
@@ -266,13 +266,13 @@ export class RotiShareGame {
   }
 
   initLights() {
-    // Warm hemisphere ambient light with terracotta ground bounce
-    const hemiLight = new THREE.HemisphereLight(0xfff7ed, 0x9a3412, 0.95);
+    // Bright, cheerful hemisphere ambient light
+    const hemiLight = new THREE.HemisphereLight(0xfffdf5, 0xfde68a, 1.35);
     this.scene.add(hemiLight);
 
     // Warm morning golden sunlight streaming through the Jharokha window
-    this.sunLight = new THREE.DirectionalLight(0xffedd5, 2.2);
-    this.sunLight.position.set(4, 9, 3);
+    this.sunLight = new THREE.DirectionalLight(0xfffaed, 2.5);
+    this.sunLight.position.set(5, 10, 4);
     this.sunLight.castShadow = true;
     this.sunLight.shadow.mapSize.width = 2048;
     this.sunLight.shadow.mapSize.height = 2048;
@@ -285,61 +285,61 @@ export class RotiShareGame {
     this.sunLight.shadow.bias = -0.0003;
     this.scene.add(this.sunLight);
 
-    // Soft sky and garden bounce light
-    const gardenBounce = new THREE.DirectionalLight(0xecfdf5, 0.55);
-    gardenBounce.position.set(-6, 5, -5);
+    // Fresh garden bounce light
+    const gardenBounce = new THREE.DirectionalLight(0xdcfce7, 0.7);
+    gardenBounce.position.set(-6, 6, -5);
     this.scene.add(gardenBounce);
 
-    // Warm interior table spotlight highlighting brass and fresh baked roti
-    const tableSpot = new THREE.PointLight(0xfef08a, 1.3, 12, 1.6);
-    tableSpot.position.set(0, 3.2, 0);
+    // Warm table spotlight illuminating fresh roti and gleaming plates
+    const tableSpot = new THREE.PointLight(0xfffbeb, 1.6, 14, 1.4);
+    tableSpot.position.set(0, 3.4, 0);
     this.scene.add(tableSpot);
   }
 
   initEnvironment() {
-    // 1. Terracotta Checkered Floor with Hand-Painted Lotus Rangoli Mandala
+    // 1. Polished Honey Sandalwood Parquet Floor with Radiant Lotus Rangoli Mandala
     const floorGeo = new THREE.PlaneGeometry(36, 36);
     const floorCanvas = document.createElement('canvas');
     floorCanvas.width = 1024;
     floorCanvas.height = 1024;
     const fctx = floorCanvas.getContext('2d');
 
-    // Base terracotta tiles with mortar grooves
-    fctx.fillStyle = '#b45309';
+    // Warm golden sandalwood planks
+    fctx.fillStyle = '#f59e0b';
     fctx.fillRect(0, 0, 1024, 1024);
     for (let r = 0; r < 16; r++) {
       for (let c = 0; c < 16; c++) {
-        fctx.fillStyle = (r + c) % 2 === 0 ? '#9a3412' : '#c2410c';
-        fctx.fillRect(c * 64 + 3, r * 64 + 3, 58, 58);
-        fctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-        fctx.fillRect(c * 64 + 3, r * 64 + 3, 58, 6);
+        fctx.fillStyle = (r + c) % 2 === 0 ? '#d97706' : '#b45309';
+        fctx.fillRect(c * 64 + 2, r * 64 + 2, 60, 60);
+        fctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+        fctx.fillRect(c * 64 + 2, r * 64 + 2, 60, 6);
       }
     }
 
     // Center traditional Lotus Rangoli / Kolam mandala under the table
     const cx = 512, cy = 512;
     fctx.strokeStyle = '#ffffff';
-    fctx.lineWidth = 5;
+    fctx.lineWidth = 6;
     fctx.beginPath();
     fctx.arc(cx, cy, 280, 0, Math.PI * 2);
     fctx.stroke();
 
     for (let a = 0; a < Math.PI * 2; a += Math.PI / 12) {
-      fctx.fillStyle = '#fef3c7';
+      fctx.fillStyle = '#fef08a';
       fctx.beginPath();
-      fctx.arc(cx + Math.cos(a) * 280, cy + Math.sin(a) * 280, 7, 0, Math.PI * 2);
+      fctx.arc(cx + Math.cos(a) * 280, cy + Math.sin(a) * 280, 8, 0, Math.PI * 2);
       fctx.fill();
     }
 
-    fctx.fillStyle = 'rgba(245, 158, 11, 0.45)';
+    fctx.fillStyle = 'rgba(251, 191, 36, 0.5)';
     fctx.beginPath();
     fctx.arc(cx, cy, 240, 0, Math.PI * 2);
     fctx.fill();
-    fctx.strokeStyle = '#fef08a';
+    fctx.strokeStyle = '#ffffff';
     fctx.lineWidth = 4;
     fctx.stroke();
 
-    // 8 Lotus Petals in Vermilion Red & White
+    // 8 Lotus Petals in Vibrant Crimson & White
     if (typeof fctx.translate === 'function' && typeof fctx.rotate === 'function') {
       for (let p = 0; p < 8; p++) {
         const angle = (p * Math.PI) / 4;
@@ -354,7 +354,7 @@ export class RotiShareGame {
         } else {
           fctx.lineTo(0, 220);
         }
-        fctx.fillStyle = 'rgba(220, 38, 38, 0.75)';
+        fctx.fillStyle = 'rgba(225, 29, 72, 0.82)';
         fctx.fill();
         fctx.strokeStyle = '#ffffff';
         fctx.lineWidth = 4;
@@ -364,7 +364,7 @@ export class RotiShareGame {
     }
 
     // Inner golden sun core
-    fctx.fillStyle = '#fbbf24';
+    fctx.fillStyle = '#fef08a';
     fctx.beginPath();
     fctx.arc(cx, cy, 60, 0, Math.PI * 2);
     fctx.fill();
@@ -379,8 +379,8 @@ export class RotiShareGame {
 
     const floorMat = new THREE.MeshStandardMaterial({
       map: floorTex,
-      roughness: 0.65,
-      metalness: 0.04
+      roughness: 0.52,
+      metalness: 0.05
     });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
@@ -388,8 +388,8 @@ export class RotiShareGame {
     floor.receiveShadow = true;
     this.scene.add(floor);
 
-    // 2. Baseboards & Warm Saffron-Cream Plaster Walls with Stenciled Border
-    const skirtingMat = new THREE.MeshStandardMaterial({ color: 0x3e1f08, roughness: 0.7 });
+    // 2. Baseboards & Warm Buttermilk Ivory Walls with White Wainscoting
+    const skirtingMat = new THREE.MeshStandardMaterial({ color: 0x6e3609, roughness: 0.55 });
     const backSkirting = new THREE.Mesh(new THREE.BoxGeometry(36, 0.4, 0.15), skirtingMat);
     backSkirting.position.set(0, -1.0, -6.4);
     this.scene.add(backSkirting);
@@ -398,23 +398,27 @@ export class RotiShareGame {
     wallCanvas.width = 1024;
     wallCanvas.height = 512;
     const wctx = wallCanvas.getContext('2d');
-    wctx.fillStyle = '#fffbeb';
+    wctx.fillStyle = '#fffbeb'; // soft warm ivory
     wctx.fillRect(0, 0, 1024, 512);
 
-    wctx.fillStyle = '#fed7aa';
-    wctx.fillRect(0, 380, 1024, 132);
-    wctx.fillStyle = '#ea580c';
-    wctx.fillRect(0, 376, 1024, 6);
+    // Lower white wainscoting with decorative border
+    wctx.fillStyle = '#fefce8';
+    wctx.fillRect(0, 360, 1024, 152);
+    wctx.fillStyle = '#f59e0b';
+    wctx.fillRect(0, 356, 1024, 6);
+    wctx.fillStyle = 'rgba(217, 119, 6, 0.15)';
+    wctx.fillRect(0, 362, 1024, 150);
 
-    wctx.fillStyle = '#b45309';
+    // Decorative Indian arch border pattern along the top
+    wctx.fillStyle = '#d97706';
     for (let x = 16; x < 1024; x += 48) {
       wctx.beginPath();
-      wctx.arc(x, 40, 12, 0, Math.PI);
+      wctx.arc(x, 36, 14, 0, Math.PI);
       wctx.fill();
-      wctx.fillRect(x - 3, 20, 6, 20);
+      wctx.fillRect(x - 3, 16, 6, 20);
     }
-    wctx.fillStyle = '#d97706';
-    wctx.fillRect(0, 56, 1024, 4);
+    wctx.fillStyle = '#f59e0b';
+    wctx.fillRect(0, 52, 1024, 4);
 
     const wallTex = new THREE.CanvasTexture(wallCanvas);
     const wallMat = new THREE.MeshStandardMaterial({
@@ -476,33 +480,33 @@ export class RotiShareGame {
     skyCanvas.height = 384;
     const sctx = skyCanvas.getContext('2d');
     const skyGrad = sctx.createLinearGradient(0, 0, 0, 384);
-    skyGrad.addColorStop(0, '#60a5fa');
-    skyGrad.addColorStop(0.5, '#bae6fd');
+    skyGrad.addColorStop(0, '#38bdf8');
+    skyGrad.addColorStop(0.55, '#bae6fd');
     skyGrad.addColorStop(0.85, '#fef08a');
-    skyGrad.addColorStop(1, '#fed7aa');
+    skyGrad.addColorStop(1, '#fde68a');
     sctx.fillStyle = skyGrad;
     sctx.fillRect(0, 0, 512, 384);
 
-    sctx.fillStyle = '#86efac';
+    sctx.fillStyle = '#4ade80';
     sctx.beginPath();
-    sctx.arc(140, 420, 220, 0, Math.PI * 2);
-    sctx.arc(380, 440, 240, 0, Math.PI * 2);
+    sctx.arc(120, 400, 200, 0, Math.PI * 2);
+    sctx.arc(380, 420, 220, 0, Math.PI * 2);
     sctx.fill();
 
-    sctx.fillStyle = '#15803d';
-    for (let t = 0; t < 12; t++) {
-      const tx = 60 + Math.random() * 400;
-      const ty = 180 + Math.random() * 120;
-      const tr = 35 + Math.random() * 45;
+    sctx.fillStyle = '#16a34a';
+    for (let t = 0; t < 14; t++) {
+      const tx = 40 + Math.random() * 430;
+      const ty = 160 + Math.random() * 140;
+      const tr = 35 + Math.random() * 50;
       sctx.beginPath();
       sctx.arc(tx, ty, tr, 0, Math.PI * 2);
       sctx.fill();
     }
-    sctx.fillStyle = '#16a34a';
-    for (let t = 0; t < 8; t++) {
-      const tx = 80 + Math.random() * 360;
-      const ty = 170 + Math.random() * 100;
-      const tr = 25 + Math.random() * 35;
+    sctx.fillStyle = '#22c55e';
+    for (let t = 0; t < 10; t++) {
+      const tx = 60 + Math.random() * 390;
+      const ty = 150 + Math.random() * 120;
+      const tr = 25 + Math.random() * 40;
       sctx.beginPath();
       sctx.arc(tx, ty, tr, 0, Math.PI * 2);
       sctx.fill();
@@ -716,16 +720,16 @@ export class RotiShareGame {
     woodTextureCanvas.width = 512;
     woodTextureCanvas.height = 512;
     const wtctx = woodTextureCanvas.getContext('2d');
-    wtctx.fillStyle = '#6e3107';
+    wtctx.fillStyle = '#92400e'; // rich warm honey teak
     wtctx.fillRect(0, 0, 512, 512);
-    wtctx.fillStyle = 'rgba(40, 16, 4, 0.18)';
+    wtctx.fillStyle = 'rgba(251, 191, 36, 0.08)';
     for (let i = 0; i < 48; i++) {
       wtctx.fillRect(0, i * 11, 512, 4 + Math.random() * 5);
     }
     const woodTex = new THREE.CanvasTexture(woodTextureCanvas);
     const tableMat = new THREE.MeshStandardMaterial({
       map: woodTex,
-      roughness: 0.52,
+      roughness: 0.44,
       metalness: 0.06
     });
     this.table = new THREE.Mesh(tableTopGeo, tableMat);

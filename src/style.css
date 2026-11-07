@@ -79,10 +79,11 @@ body, html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background: linear-gradient(180deg, rgba(30, 16, 7, 0.88) 0%, rgba(30, 16, 7, 0.45) 85%, transparent 100%);
-  color: #fff;
+  padding: 10px 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 252, 245, 0.9) 75%, rgba(255, 255, 255, 0) 100%);
+  color: #451a03;
   z-index: 20;
+  box-shadow: 0 4px 20px rgba(180, 83, 9, 0.08);
 }
 
 .hud-left, .hud-right {
@@ -102,10 +103,10 @@ body, html {
 
 /* Round HUD Icon Buttons */
 .hud-icon-btn, .icon-btn {
-  background: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid #fed7aa;
   backdrop-filter: blur(8px);
-  color: #fff;
+  color: #78350f;
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -115,13 +116,14 @@ body, html {
   align-items: center;
   justify-content: center;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 6px rgba(180, 83, 9, 0.12);
 }
 
 .hud-icon-btn:hover, .icon-btn:hover {
   transform: scale(1.1);
-  background: rgba(245, 158, 11, 0.35);
-  border-color: #fbbf24;
+  background: #fef3c7;
+  border-color: #f59e0b;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
 }
 
 .hud-icon-btn:active, .icon-btn:active {
@@ -159,8 +161,8 @@ body, html {
 #level-title {
   font-family: var(--font-heading);
   font-size: 1.15rem;
-  color: #fef3c7;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  color: #78350f;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
   white-space: nowrap;
 }
 
@@ -171,10 +173,10 @@ body, html {
 }
 
 .badge {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   background: #10b981;
   color: white;
-  padding: 1px 7px;
+  padding: 2px 8px;
   border-radius: 10px;
   font-weight: 700;
   align-self: flex-start;
@@ -182,16 +184,16 @@ body, html {
 }
 
 .mode-tag {
-  background: #3b82f6;
+  background: #f59e0b;
 }
 
 .timer-badge {
-  background: rgba(239, 68, 68, 0.3);
-  border: 1px solid #ef4444;
+  background: #fef2f2;
+  border: 1.5px solid #ef4444;
   backdrop-filter: blur(8px);
   padding: 5px 12px;
   border-radius: var(--radius-md);
-  color: #fff;
+  color: #b91c1c;
   font-family: var(--font-heading);
   font-size: 1.05rem;
   display: flex;
@@ -201,29 +203,31 @@ body, html {
 }
 
 .coins-badge {
-  background: rgba(245, 158, 11, 0.25);
-  border: 1px solid #fbbf24;
+  background: #fffbeb;
+  border: 1.5px solid #f59e0b;
   backdrop-filter: blur(8px);
   padding: 5px 12px;
   border-radius: var(--radius-md);
-  color: #fef08a;
+  color: #b45309;
   font-family: var(--font-heading);
   font-size: 1.1rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 5px;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15);
 }
 
 /* Compact Objective Banner in HUD Center */
 #compact-objective {
-  background: rgba(45, 23, 10, 0.85);
-  border: 1.5px solid rgba(245, 158, 11, 0.6);
+  background: #ffffff;
+  border: 2px solid #f59e0b;
   border-radius: var(--radius-pill);
-  padding: 6px 18px;
+  padding: 6px 20px;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 14px rgba(180, 83, 9, 0.12);
   backdrop-filter: blur(8px);
   text-align: center;
 }
@@ -234,9 +238,9 @@ body, html {
 
 #objective-instruction {
   font-family: var(--font-heading);
-  font-size: 0.98rem;
-  color: #fef3c7;
-  font-weight: 600;
+  font-size: 1rem;
+  color: #78350f;
+  font-weight: 700;
   line-height: 1.25;
 }
 
@@ -245,26 +249,28 @@ body, html {
   display: flex;
   gap: 3px;
   font-size: 1.5rem;
-  color: #78716c;
+  color: #d6d3d1;
 }
 
 .stars-container .star.active {
-  color: #fbbf24;
-  text-shadow: 0 0 10px #f59e0b;
+  color: #f59e0b;
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
 }
 
 .score-badge {
-  background: rgba(255, 255, 255, 0.16);
+  background: #ffffff;
   backdrop-filter: blur(8px);
   padding: 5px 12px;
   border-radius: var(--radius-md);
-  color: #fff;
+  color: #78350f;
   font-family: var(--font-heading);
   font-size: 1.1rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1.5px solid #fed7aa;
+  box-shadow: 0 2px 6px rgba(180, 83, 9, 0.1);
 }
 
 .score-icon {
@@ -274,16 +280,16 @@ body, html {
 /* Sub-instruction Floating Toast */
 .sub-instruction-bar {
   align-self: center;
-  margin-top: 4px;
-  background: rgba(28, 15, 6, 0.82);
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid #f59e0b;
   border-radius: var(--radius-pill);
-  padding: 4px 18px;
-  color: #fde68a;
-  font-size: 0.88rem;
-  font-weight: 600;
-  backdrop-filter: blur(6px);
-  box-shadow: var(--shadow-sm);
+  padding: 6px 22px;
+  color: #92400e;
+  font-size: 0.94rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(180, 83, 9, 0.12);
   max-width: 80%;
   text-align: center;
   pointer-events: none;
@@ -296,13 +302,14 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  background: rgba(38, 20, 8, 0.92);
-  padding: 12px 24px;
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(12px);
-  border: 1.5px solid rgba(245, 158, 11, 0.45);
-  box-shadow: var(--shadow-lg);
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 14px 28px;
+  border-radius: 24px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2.5px solid rgba(245, 158, 11, 0.55);
+  box-shadow: 0 16px 45px rgba(120, 53, 15, 0.18), 0 2px 8px rgba(0, 0, 0, 0.05);
   max-width: 95%;
   z-index: 20;
 }
@@ -409,42 +416,67 @@ body, html {
 
 .slice-selector {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.fraction-selector-header {
+  display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.fraction-header-label {
+  font-family: var(--font-heading);
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: #b45309;
+  letter-spacing: 0.5px;
+}
+
+.fraction-buttons-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .selector-label {
-  color: #fde68a;
+  color: #78350f;
   font-family: var(--font-heading);
   font-size: 0.92rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .slice-count-btn {
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
+  background: #ffffff;
+  border: 2px solid #fed7aa;
+  color: #78350f;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
   font-family: var(--font-heading);
-  font-size: 0.92rem;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: inline-flex;
   align-items: center;
+  gap: 7px;
+  box-shadow: 0 3px 8px rgba(180, 83, 9, 0.08);
 }
 
 .fraction-pie {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  margin-right: 6px;
-  vertical-align: middle;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 .pie-2 {
   background: conic-gradient(#f59e0b 0% 50%, #e2e8f0 50% 100%);
@@ -463,38 +495,43 @@ body, html {
 }
 
 .slice-count-btn:hover {
-  background: rgba(245, 158, 11, 0.35);
+  background: #fffbeb;
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(245, 158, 11, 0.2);
 }
 
 .slice-count-btn.active {
-  background: #10b981;
-  color: #fff;
-  border-color: #34d399;
-  font-weight: 700;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border-color: #047857;
+  font-weight: 800;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px) scale(1.03);
 }
 
 .cut-confirm-btn {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #451a03;
-  border: 1px solid #fbbf24;
-  padding: 7px 16px;
+  background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+  color: #ffffff;
+  border: 2px solid #fef08a;
+  padding: 10px 24px;
   border-radius: var(--radius-md);
   font-family: var(--font-heading);
-  font-size: 0.98rem;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(217, 119, 6, 0.4);
-  transition: all 0.2s;
-  display: flex;
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.35);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
+  margin-top: 4px;
 }
 
 .cut-confirm-btn:hover {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(217, 119, 6, 0.6);
+  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.55);
 }
 
 .cut-confirm-btn:active {
@@ -503,40 +540,47 @@ body, html {
 
 .level-actions {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
 }
 
 .primary-btn, .secondary-btn {
-  padding: 7px 18px;
+  padding: 9px 24px;
   border-radius: var(--radius-md);
   font-family: var(--font-heading);
-  font-size: 0.98rem;
-  font-weight: 700;
+  font-size: 1.02rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
   border: none;
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-  border: 1px solid #34d399;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+  border: 2px solid #a7f3d0;
 }
 
 .primary-btn:hover {
-  background: linear-gradient(135deg, #34d399, #10b981);
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 22px rgba(16, 185, 129, 0.45);
 }
 
 .secondary-btn {
-  background: rgba(255, 255, 255, 0.14);
-  color: #fefce8;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: #f8fafc;
+  color: #475569;
+  border: 2px solid #cbd5e1;
 }
 
 .secondary-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #1e293b;
+  transform: translateY(-1px);
 }
 
 /* Compact Bottom-Right Floating Teacher's Hint Dock */
